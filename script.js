@@ -15,8 +15,13 @@ document.querySelector(".check").addEventListener("click", function () {
   if (inputValue === correctAns) {
     displayMessage("✅Correct!");
     score += 5;
+    presentScore(score);
+
+    setTimeout(function () {
+      prepareNextQn();
+    }, 1 * 1000);
   } else {
-    displayMessage("🚫Wrong, you fucktard! GAME OVER");
+    displayMessage("🚫GAME OVER");
     setBgColor("red");
   }
   presentScore(score);
@@ -26,24 +31,9 @@ document.querySelector(".check").addEventListener("click", function () {
   }
 });
 
-// while (answerIsCorrect) {
-//   document.querySelector(".check").addEventListener("click", function () {
-//     let inputValue = Number(document.querySelector(".guess").value);
-//     if (inputValue === question[1]) {
-//       displayMessage("✅Correct!");
-//       score += 5;
-//       presentScore(score);
-//       correctAns = goNextQn();
-//     } else {
-//       displayMessage("Wrong, Game Over!");
-//       setBgColor("red");
-//       answerIsCorrect = false;
-//     }
-//   });
-// }
-
 document.querySelector(".again").addEventListener("click", function () {
   question = generateQuestion();
+  correctAns = question[1];
   document.querySelector(".guess").value = "";
   displayMessage("answer the question");
   setBgColor("#222");
@@ -55,9 +45,19 @@ document.querySelector(".again").addEventListener("click", function () {
 function generateQuestion() {
   let x = Math.floor(Math.random() * 101);
   let y = Math.floor(Math.random() * 101);
-  const correctAns = x + y;
+  let correctAns = 0;
+  const operators = ["-", "+", "x"];
+  let op = operators[Math.floor(Math.random() * 3)];
 
-  return [`${x} + ${y} = ?`, correctAns];
+  if (op === "-") {
+    correctAns = x - y;
+  } else if (op === "+") {
+    correctAns = x + y;
+  } else if (op === "x") {
+    correctAns = Math.floor(x * y);
+  }
+
+  return [`${x} ${op} ${y} = ?`, correctAns];
 }
 
 function setInput(setValue) {
@@ -92,10 +92,10 @@ function goNextQn() {
   return question[1];
 }
 
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
+function prepareNextQn() {
+  question = generateQuestion();
+  correctAns = question[1];
+  document.querySelector(".guess").value = "";
+  setQuestion(question[0]);
+  displayMessage("answer the question");
 }
