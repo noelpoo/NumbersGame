@@ -1,58 +1,101 @@
-'use strict';
+"use strict";
 
-let dice = Math.floor(Math.random() * 21);
-let score = 20;
-
-console.log(dice);
+let question = generateQuestion();
+let score = 0;
+let highscore = 0;
+let answerIsCorrect = true;
+let correctAns = question[1];
 
 presentScore(score);
+setHighScore(highscore);
+setQuestion(question[0]);
 
-document.querySelector('.check').addEventListener('click', function () {
-  let inputValue = Number(document.querySelector('.guess').value);
-  if (inputValue === dice) {
-    displayMessage('Correct!');
-    document.querySelector('.number').textContent = String(dice);
-    setBgColor('#60b347');
+document.querySelector(".check").addEventListener("click", function () {
+  let inputValue = Number(document.querySelector(".guess").value);
+  if (inputValue === correctAns) {
+    displayMessage("✅Correct!");
     score += 5;
-  } else if (!inputValue) {
-    displayMessage('🚫 No Number!');
-  } else if (inputValue > dice) {
-    displayMessage(`${inputValue} is too high!`);
-    setInput('');
-    score -= 1;
-  } else if (inputValue < dice) {
-    displayMessage(`${inputValue} is too low!`);
-    setInput('');
-    score -= 1;
+  } else {
+    displayMessage("🚫Wrong, you fucktard! GAME OVER");
+    setBgColor("red");
   }
+  presentScore(score);
+  if (score > highscore) {
+    highscore = score;
+    setHighScore(highscore);
+  }
+});
+
+// while (answerIsCorrect) {
+//   document.querySelector(".check").addEventListener("click", function () {
+//     let inputValue = Number(document.querySelector(".guess").value);
+//     if (inputValue === question[1]) {
+//       displayMessage("✅Correct!");
+//       score += 5;
+//       presentScore(score);
+//       correctAns = goNextQn();
+//     } else {
+//       displayMessage("Wrong, Game Over!");
+//       setBgColor("red");
+//       answerIsCorrect = false;
+//     }
+//   });
+// }
+
+document.querySelector(".again").addEventListener("click", function () {
+  question = generateQuestion();
+  document.querySelector(".guess").value = "";
+  displayMessage("answer the question");
+  setBgColor("#222");
+  setQuestion(question[0]);
+  score = 0;
   presentScore(score);
 });
 
-document.querySelector('.again').addEventListener('click', function () {
-  document.querySelector('.guess').value = '';
-  displayMessage('Start guessing...');
-  setBgColor('#222');
-  setNumber('?');
-  dice = Math.floor(Math.random() * 21);
-  console.log(dice);
-});
+function generateQuestion() {
+  let x = Math.floor(Math.random() * 101);
+  let y = Math.floor(Math.random() * 101);
+  const correctAns = x + y;
+
+  return [`${x} + ${y} = ?`, correctAns];
+}
 
 function setInput(setValue) {
-  document.querySelector('.guess').value = setValue;
+  document.querySelector(".guess").value = setValue;
 }
 
 function displayMessage(message) {
-  document.querySelector('.message').textContent = message;
+  document.querySelector(".message").textContent = message;
 }
 
-function setNumber(number) {
-  document.querySelector('.number').textContent = number;
+function setQuestion(number) {
+  document.querySelector(".number").textContent = number;
 }
 
 function setBgColor(color) {
-  document.querySelector('body').style.backgroundColor = color;
+  document.querySelector("body").style.backgroundColor = color;
 }
 
 function presentScore(scoreValue) {
-  document.querySelector('.score').textContent = String(scoreValue);
+  document.querySelector(".score").textContent = String(scoreValue);
+}
+
+function setHighScore(scorevalue) {
+  document.querySelector(".highscore").textContent = scorevalue;
+}
+
+function goNextQn() {
+  document.querySelector(".guess").value = "";
+  displayMessage("Answer the question");
+  question = generateQuestion();
+  setQuestion(question[0]);
+  return question[1];
+}
+
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
 }
