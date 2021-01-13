@@ -43,17 +43,23 @@ document.querySelector(".again").addEventListener("click", function () {
 });
 
 function generateQuestion() {
-  let x = Math.floor(Math.random() * 101);
-  let y = Math.floor(Math.random() * 101);
   let correctAns = 0;
+  let x = 0;
+  let y = 0;
   const operators = ["-", "+", "x"];
   let op = operators[Math.floor(Math.random() * 3)];
 
   if (op === "-") {
+    x = Math.floor(Math.random() * 101);
+    y = Math.floor(Math.random() * 101);
     correctAns = x - y;
   } else if (op === "+") {
+    x = Math.floor(Math.random() * 101);
+    y = Math.floor(Math.random() * 101);
     correctAns = x + y;
   } else if (op === "x") {
+    x = Math.floor(Math.random() * 11);
+    y = Math.floor(Math.random() * 21);
     correctAns = Math.floor(x * y);
   }
 
