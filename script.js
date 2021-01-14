@@ -1,5 +1,7 @@
 "use strict";
 
+const HEADER = "Do Your Math!";
+
 let question = generateQuestion();
 let score = 0;
 let highscore = 0;
@@ -21,7 +23,8 @@ document.querySelector(".check").addEventListener("click", function () {
       prepareNextQn();
     }, 1 * 1000);
   } else {
-    displayMessage("🚫GAME OVER");
+    displayMessage("🚫WRONG ANSWER");
+    changeHeader("GAME OVER!");
     setBgColor("red");
   }
   presentScore(score);
@@ -32,6 +35,7 @@ document.querySelector(".check").addEventListener("click", function () {
 });
 
 document.querySelector(".again").addEventListener("click", function () {
+  changeHeader(HEADER);
   question = generateQuestion();
   correctAns = question[1];
   document.querySelector(".guess").value = "";
@@ -88,6 +92,10 @@ function presentScore(scoreValue) {
 
 function setHighScore(scorevalue) {
   document.querySelector(".highscore").textContent = scorevalue;
+}
+
+function changeHeader(str) {
+  document.querySelector("h1").textContent = str;
 }
 
 function goNextQn() {
