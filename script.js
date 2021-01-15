@@ -2,6 +2,9 @@
 
 const HEADER = "Do Your Math!";
 
+const checkBtn = document.querySelector(".check");
+const againBtn = document.querySelector(".again");
+
 let question = generateQuestion();
 let score = 0;
 let highscore = 0;
@@ -12,7 +15,39 @@ presentScore(score);
 setHighScore(highscore);
 setQuestion(question[0]);
 
-document.querySelector(".check").addEventListener("click", function () {
+checkBtn.addEventListener("click", function () {
+  checkAns();
+});
+
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Enter") {
+    checkAns();
+  }
+});
+
+againBtn.addEventListener("click", function () {
+  restartGame();
+});
+
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") {
+    restartGame();
+  }
+});
+
+function restartGame() {
+  changeHeader(HEADER);
+  question = generateQuestion();
+  correctAns = question[1];
+  document.querySelector(".guess").value = "";
+  displayMessage("answer the question");
+  setBgColor("#222");
+  setQuestion(question[0]);
+  score = 0;
+  presentScore(score);
+}
+
+function checkAns() {
   let inputValue = Number(document.querySelector(".guess").value);
   if (inputValue === correctAns) {
     displayMessage("✅Correct!");
@@ -23,8 +58,8 @@ document.querySelector(".check").addEventListener("click", function () {
       prepareNextQn();
     }, 1 * 1000);
   } else {
-    displayMessage("🚫WRONG ANSWER");
-    changeHeader("GAME OVER!");
+    displayMessage("🚫WRONG ANSWER, Press Esc to restart");
+    changeHeader("GAME OVER");
     setBgColor("red");
   }
   presentScore(score);
@@ -32,19 +67,7 @@ document.querySelector(".check").addEventListener("click", function () {
     highscore = score;
     setHighScore(highscore);
   }
-});
-
-document.querySelector(".again").addEventListener("click", function () {
-  changeHeader(HEADER);
-  question = generateQuestion();
-  correctAns = question[1];
-  document.querySelector(".guess").value = "";
-  displayMessage("answer the question");
-  setBgColor("#222");
-  setQuestion(question[0]);
-  score = 0;
-  presentScore(score);
-});
+}
 
 function generateQuestion() {
   let correctAns = 0;
@@ -68,6 +91,22 @@ function generateQuestion() {
   }
 
   return [`${x} ${op} ${y} = ?`, correctAns];
+}
+
+function goNextQn() {
+  document.querySelector(".guess").value = "";
+  displayMessage("Answer the question");
+  question = generateQuestion();
+  setQuestion(question[0]);
+  return question[1];
+}
+
+function prepareNextQn() {
+  question = generateQuestion();
+  correctAns = question[1];
+  document.querySelector(".guess").value = "";
+  setQuestion(question[0]);
+  displayMessage("answer the question");
 }
 
 function setInput(setValue) {
@@ -96,20 +135,4 @@ function setHighScore(scorevalue) {
 
 function changeHeader(str) {
   document.querySelector("h1").textContent = str;
-}
-
-function goNextQn() {
-  document.querySelector(".guess").value = "";
-  displayMessage("Answer the question");
-  question = generateQuestion();
-  setQuestion(question[0]);
-  return question[1];
-}
-
-function prepareNextQn() {
-  question = generateQuestion();
-  correctAns = question[1];
-  document.querySelector(".guess").value = "";
-  setQuestion(question[0]);
-  displayMessage("answer the question");
 }
